@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -71,3 +72,7 @@ export default defineConfig([
   },
 ])
 ```
+=======
+# Platform-de-Conectare-Investitori-Startup-uri
+Platformă web care facilitează conectarea între investitori și startup-uri prin sistem de matching bazat pe cuvinte cheie, profiluri detaliate și sistem de recomandări bidirectional
+>>>>>>> 4e88d30a6bb2232261eca33b7bc89e9d28783ae9
