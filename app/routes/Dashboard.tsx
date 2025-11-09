@@ -1,33 +1,15 @@
-import { redirect, useLoaderData } from "react-router";
+import { Form, useLoaderData } from "react-router";
 import type { Route } from "./+types/Dashboard";
-import { getUserById } from "~/DAL/queries/users";
-import { createSupabaseServerClient } from "~/lib/supabaseClient";
+import { getAuthenticatedUser } from "~/DAL/queries/auth";
+import { logoutUser } from "~/DAL/commands/auth";
 
 export async function loader({ request }: Route.LoaderArgs) {
-    const { supabase, headers } = createSupabaseServerClient(request);
+    const { email, userType } = await getAuthenticatedUser(request);
+    return { email, userType };
+}
 
-    const {
-        data: { session },
-        error: sessionError,
-    } = await supabase.auth.getSession();
-
-    if (sessionError || !session) {
-        console.warn("No session found:", sessionError?.message);
-        throw redirect("/login", { headers });
-    }
-
-    const user = session.user;
-    if (!user) {
-        console.warn("No user found in session");
-        throw redirect("/login", { headers });
-    }
-
-    const dbUser = await getUserById(user.id);
-
-    return {
-        email: dbUser?.email ?? user.email,
-        userType: dbUser?.user_type ?? "unknown",
-    };
+export async function action({ request }: Route.ActionArgs) {
+    return logoutUser(request);
 }
 
 export default function Dashboard() {
@@ -39,6 +21,15 @@ export default function Dashboard() {
             <p className="mt-4 text-lg text-gray-700">
                 Welcome, <span className="font-semibold">{email}</span> ({userType})
             </p>
+
+            <Form method="post" className="mt-6">
+                <button
+                    type="submit"
+                    className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+                >
+                    Logout
+                </button>
+            </Form>
         </div>
     );
 }

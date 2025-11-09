@@ -1,29 +1,9 @@
-import { Form, redirect, useActionData } from "react-router";
+import { Form, useActionData } from "react-router";
 import type { Route } from "./+types/Login";
-import { createSupabaseServerClient } from "~/lib/supabaseClient";
+import { login } from "~/DAL/commands/auth";
 
 export async function action({ request }: Route.ActionArgs) {
-	const formData = await request.formData();
-	const email = formData.get("email");
-	const password = formData.get("password");
-
-	if (typeof email !== "string" || typeof password !== "string") {
-		return { error: "Invalid form submission" };
-	}
-
-	const { supabase, headers } = createSupabaseServerClient(request);
-
-	const { data, error } = await supabase.auth.signInWithPassword({
-		email,
-		password,
-	});
-
-	if (error) return { error: error.message };
-
-	const session = data.session;
-	if (!session) return { error: "No session returned" };
-
-	return redirect("/", { headers });
+	return login(request);
 }
 
 export default function Login() {

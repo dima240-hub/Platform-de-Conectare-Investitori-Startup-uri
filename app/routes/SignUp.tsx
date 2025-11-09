@@ -1,30 +1,9 @@
-import { Form, redirect, useActionData } from "react-router"
-import { createUser } from "../DAL/commands/users"
+import { Form, useActionData } from "react-router"
 import type { Route } from "./+types/SignUp"
-import { createSupabaseServerClient } from "~/lib/supabaseClient";
+import { signUp } from "~/DAL/commands/auth";
 
 export async function action({ request }: Route.ActionArgs) {
-    const formData = await request.formData();
-    const email: string = formData.get("email") as string;
-    const password = formData.get("password") as string;
-    const userType = formData.get("userType") as "startup" | "investor";
-
-    const { supabase, headers } = createSupabaseServerClient(request);
-
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: undefined },
-    });
-
-    if (error) return { error: error.message };
-
-    const user = data.user;
-    if (!user) return { error: "No user returned from Supabase" };
-
-    await createUser(user.id, email, userType);
-
-    return redirect("/", { headers });
+    return signUp(request);
 }
 
 export default function Signup() {

@@ -16,13 +16,12 @@ model connections {
   message                              String?
   created_at                           DateTime?         @default(now()) @db.Timestamptz(6)
   updated_at                           DateTime?         @default(now()) @db.Timestamptz(6)
-  users_connections_receiver_idTousers public_users      @relation("connections_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users_connections_sender_idTousers   public_users      @relation("connections_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_connections_receiver_idTousers users      @relation("connections_receiver_idTousers", fields: [receiver_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_connections_sender_idTousers   users      @relation("connections_sender_idTousers", fields: [sender_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model investor_profiles {
   id                   String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id              String       @db.Uuid
@@ -41,7 +40,7 @@ model investor_profiles {
   total_reviews        Int?         @default(0)
   created_at           DateTime?    @default(now()) @db.Timestamptz(6)
   updated_at           DateTime?    @default(now()) @db.Timestamptz(6)
-  users                public_users @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users                users @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
@@ -54,13 +53,12 @@ model reports {
   description                      String?
   status                           report_status @default(pending)
   created_at                       DateTime?     @default(now()) @db.Timestamptz(6)
-  users_reports_reported_idTousers public_users  @relation("reports_reported_idTousers", fields: [reported_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users_reports_reporter_idTousers public_users  @relation("reports_reporter_idTousers", fields: [reporter_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_reports_reported_idTousers users  @relation("reports_reported_idTousers", fields: [reported_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_reports_reporter_idTousers users  @relation("reports_reporter_idTousers", fields: [reporter_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model reviews {
   id                               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   reviewer_id                      String       @db.Uuid
@@ -69,13 +67,12 @@ model reviews {
   feedback                         String?
   created_at                       DateTime?    @default(now()) @db.Timestamptz(6)
   updated_at                       DateTime?    @default(now()) @db.Timestamptz(6)
-  users_reviews_reviewee_idTousers public_users @relation("reviews_reviewee_idTousers", fields: [reviewee_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  users_reviews_reviewer_idTousers public_users @relation("reviews_reviewer_idTousers", fields: [reviewer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_reviews_reviewee_idTousers users @relation("reviews_reviewee_idTousers", fields: [reviewee_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_reviews_reviewer_idTousers users @relation("reviews_reviewer_idTousers", fields: [reviewer_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model startup_profiles {
   id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   user_id         String        @db.Uuid
@@ -97,12 +94,12 @@ model startup_profiles {
   total_reviews   Int?          @default(0)
   created_at      DateTime?     @default(now()) @db.Timestamptz(6)
   updated_at      DateTime?     @default(now()) @db.Timestamptz(6)
-  users           public_users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users           users  @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@schema("public")
 }
 
-model public_users {
+model users {
   id                                         String              @id @db.Uuid
   email                                      String              @unique
   user_type                                  user_type
